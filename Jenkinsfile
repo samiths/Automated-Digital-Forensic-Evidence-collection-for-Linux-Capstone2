@@ -1,9 +1,9 @@
 pipeline {
     agent none
     environment {
-    WORKSPACE_DIR = "/home/jenkins/workspace/Taxonomy_NEW"
-    MASTER_WORKSPACE_DIR = "/var/lib/jenkins/workspace/Taxonomy_NEW"
-    DB_PATH       = "/home/jenkins/workspace/Taxonomy_NEW/output/metadata.db"
+    WORKSPACE_DIR = "/home/jenkins/workspace/Automatic_Linux_Forensic_Evidence_collection"
+    MASTER_WORKSPACE_DIR = "/var/lib/jenkins/workspace/Automatic_Linux_Forensic_Evidence_collection"
+    DB_PATH       = "/home/jenkins/workspace/Automatic_Linux_Forensic_Evidence_collection/output/metadata.db"
     GRAFANA_FORENSIC_DIR = "/var/lib/grafana/forensic"
     FORENSIC_AGENT = "/home/jenkins/forensic/collect_agent.py"
     LOKI_URL = "http://172.16.0.4:3100/loki/api/v1/push"
