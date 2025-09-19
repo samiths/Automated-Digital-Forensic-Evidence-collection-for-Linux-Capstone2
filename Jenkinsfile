@@ -16,28 +16,29 @@ pipeline {
         chmod -R 700 /home/jenkins/workspace/ || true
         echo "Copying agent to target..."
         scripts/collect_agent.py
+        stash name: 'artifacts', includes: 'output/**'
       '''
     }
   }
     stage('Prioritize Artifacts') {
-      agent { label 'agent' }
+      agent { label 'master' }
       steps {
-        sh 'python3 scripts/prioritize.py --in ${WORKSPACE_DIR}/output/artifacts.json --out ${WORKSPACE_DIR}/output/priority_list.json'
+          unstash 'artifacts'
+          archiveArtifacts artifacts: 'output/**', fingerprint: true
+          sh 'python3 scripts/prioritize.py --in ${WORKSPACE_DIR}/output/artifacts.json --out ${WORKSPACE_DIR}/output/priority_list.json'
       }
     }
     stage('Format and Split Logs') {
-        agent { label 'agent' }
+        agent { label 'master' }
         steps {
         sh 'python3 scripts/format_json.py --in ${WORKSPACE_DIR}/output/artifacts.json --out ${WORKSPACE_DIR}/output/formatted_logs.json'
         sh 'python3 scripts/split_formatted_logs.py'
-        stash name: 'artifacts', includes: 'output/**'    
+            
       }
     }   
         stage('Format Logs') {
             agent { label 'master' } 
-            steps {
-                unstash 'artifacts'
-                archiveArtifacts artifacts: 'output/**', fingerprint: true  
+            steps { 
                 sh '''
                 mkdir -p ${MASTER_WORKSPACE_DIR}/output/loki_logs
                 for file in ${MASTER_WORKSPACE_DIR}/output/split_logs/*.json; do
