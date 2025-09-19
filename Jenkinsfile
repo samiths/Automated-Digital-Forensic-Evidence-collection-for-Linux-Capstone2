@@ -25,13 +25,13 @@ pipeline {
       steps {
           unstash 'artifacts'
           archiveArtifacts artifacts: 'output/**', fingerprint: true
-          sh 'python3 scripts/prioritize.py --in ${WORKSPACE_DIR}/output/artifacts.json --out ${WORKSPACE_DIR}/output/priority_list.json'
+          sh 'python3 scripts/prioritize.py --in ${MASTER_WORKSPACE_DIR}/output/artifacts.json --out ${MASTER_WORKSPACE_DIR}/output/priority_list.json'
       }
     }
     stage('Format and Split Logs') {
         agent { label 'master' }
         steps {
-        sh 'python3 scripts/format_json.py --in ${WORKSPACE_DIR}/output/artifacts.json --out ${WORKSPACE_DIR}/output/formatted_logs.json'
+        sh 'python3 scripts/format_json.py --in ${MASTER_WORKSPACE_DIR}/output/artifacts.json --out ${MASTER_WORKSPACE_DIR}/output/formatted_logs.json'
         sh 'python3 scripts/split_formatted_logs.py'
             
       }
